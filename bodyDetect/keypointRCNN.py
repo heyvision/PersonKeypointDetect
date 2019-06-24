@@ -49,7 +49,7 @@ def predict(src, model):
   # tensor_cv = np.transpose(img_cv, (2, 0, 1))
   tensor_cv = torchvision.transforms.ToTensor()(img_cv)
   tensor_cv = tensor_cv.cuda()
-  
+
   # print (tensor_cv.size())
   x = [tensor_cv]
   predictions = model(x)
@@ -74,7 +74,7 @@ def predict(src, model):
   # index_sort = np.argsort(-keypoints_scores[person_id])
   # for i in range (10):
   #   print (COCO_PERSON_KEYPOINT_NAMES[index_sort[i]])
-  cv2.rectangle(src, (boxes[person_id][0], boxes[person_id][1]), 
+  cv2.rectangle(src, (boxes[person_id][0], boxes[person_id][1]),
       (boxes[person_id][2], boxes[person_id][3]), (255,0,0), 2)
   i_keypoints = keypoints[person_id,:,:]
   for j in range(i_keypoints.shape[0]):
@@ -83,9 +83,13 @@ def predict(src, model):
       text = COCO_PERSON_KEYPOINT_NAMES[j] # + str(round(keypoints_scores[person_id][j], 2))
       if not i_keypoints[j][2]:
         text += '(hide)'
-      cv2.putText(src, text, (i_keypoints[j][0], i_keypoints[j][1]), 
+      cv2.putText(src, text, (i_keypoints[j][0], i_keypoints[j][1]),
           cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0,255,0), 1)
-  # cv2.line()
+  right_shoulder = (i_keypoints[6][0], i_keypoints[6][1])
+  right_elbow = (i_keypoints[8][0], i_keypoints[8][1])
+  right_wrist = (i_keypoints[10][0], i_keypoints[10][1])
+  cv2.line(src, right_shoulder, right_elbow, (255, 0, 0), 1)
+  cv2.line(src, right_wrist, right_elbow, (255, 0, 0), 1)
   return src
 
 
@@ -134,7 +138,7 @@ def main():
     pipeline.stop()
 
 def one_image():
-  src = cv2.imread('/home/hit/Pictures/test2_Color.png')
+  src = cv2.imread('/home/hit/Pictures/test.jpg')
   # src = cv2.resize(src, (320, 180))
 
   model = torchvision.models.detection.keypointrcnn_resnet50_fpn(pretrained=True)
@@ -153,5 +157,5 @@ if __name__ == "__main__":
   else:
     print("Cuda is unavailable")
 
-  main()
-  #one_image()
+  #main()
+  one_image()

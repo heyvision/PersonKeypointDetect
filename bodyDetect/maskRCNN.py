@@ -124,7 +124,7 @@ def main():
     pipeline.stop()
 
 def one_image():
-  src = cv2.imread('/home/hit/Pictures/test2_Color.png')
+  src = cv2.imread('/home/hit/Pictures/test.jpg')
   # src = cv2.resize(src, (320, 180))
   model = torchvision.models.detection.maskrcnn_resnet50_fpn(pretrained=True)
   model = model.cuda()
@@ -140,5 +140,5 @@ if __name__ == "__main__":
   else:
     print("Cuda is unavailable")
 
-  main()
-  #one_image()
+  #main()
+  one_image()
